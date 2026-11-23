@@ -1,0 +1,51 @@
+{% extends 'dashboard/base.html' %}
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h4 class="fw-bold mb-0">Báo cáo & Thống kê (Pandas / NumPy / Matplotlib)</h4>
+    <a href="{% url 'export_orders_csv' %}" class="btn btn-success rounded-3 px-3">
+        <i class="bi bi-file-earmark-spreadsheet"></i> Xuất báo cáo CSV
+    </a>
+</div>
+
+{% if stats %}
+<div class="row g-3 mb-4">
+    <div class="col-md-4">
+        <div class="custom-card">
+            <small class="text-muted">Giá trị đơn hàng trung bình</small>
+            <h5 class="fw-bold text-primary mt-1">{{ stats.doanh_thu_tb|floatformat:0 }} đ</h5>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="custom-card">
+            <small class="text-muted">Đơn hàng giá trị cao nhất</small>
+            <h5 class="fw-bold text-success mt-1">{{ stats.don_lon_nhat|floatformat:0 }} đ</h5>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="custom-card">
+            <small class="text-muted">Đơn hàng giá trị thấp nhất</small>
+            <h5 class="fw-bold text-warning mt-1">{{ stats.don_nho_nhat|floatformat:0 }} đ</h5>
+        </div>
+    </div>
+</div>
+{% endif %}
+
+<div class="row g-3">
+    <div class="col-md-7">
+        <div class="custom-card">
+            <h6 class="fw-bold mb-3">Biểu đồ Doanh thu theo ngày</h6>
+            {% if chart_revenue %}
+                <img src="data:image/png;base64,{{ chart_revenue }}" class="img-fluid w-100">
+            {% endif %}
+        </div>
+    </div>
+    <div class="col-md-5">
+        <div class="custom-card">
+            <h6 class="fw-bold mb-3">Tỷ trọng theo danh mục</h6>
+            {% if chart_category %}
+                <img src="data:image/png;base64,{{ chart_category }}" class="img-fluid w-100">
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endblock %}

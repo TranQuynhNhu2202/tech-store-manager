@@ -1,0 +1,126 @@
+{% extends 'dashboard/base.html' %}
+
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h4 class="fw-bold mb-0">Tổng quan</h4>
+    <a href="{% url 'product_add' %}" class="btn btn-primary rounded-3 px-3">
+        <i class="bi bi-plus-lg"></i> Thêm sản phẩm
+    </a>
+</div>
+
+<!-- Hàng 1: 4 thẻ KPI (Xanh dương, Xanh lá, Cam, Tím giống mẫu) -->
+<div class="row g-3 mb-4">
+    <div class="col-md-3">
+        <div class="custom-card d-flex align-items-center gap-3">
+            <div class="icon-box" style="background-color: #2563eb;"><i class="bi bi-box-seam"></i></div>
+            <div>
+                <h5 class="fw-bold mb-0">{{ total_products }}</h5>
+                <small class="text-muted">Tổng sản phẩm</small>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="custom-card d-flex align-items-center gap-3">
+            <div class="icon-box" style="background-color: #10b981;"><i class="bi bi-cart-check"></i></div>
+            <div>
+                <h5 class="fw-bold mb-0">{{ total_orders }}</h5>
+                <small class="text-muted">Đơn hàng</small>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="custom-card d-flex align-items-center gap-3">
+            <div class="icon-box" style="background-color: #f59e0b;"><i class="bi bi-currency-dollar"></i></div>
+            <div>
+                <h5 class="fw-bold mb-0">{{ total_revenue|floatformat:0 }} đ</h5>
+                <small class="text-muted">Doanh thu</small>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="custom-card d-flex align-items-center gap-3">
+            <div class="icon-box" style="background-color: #8b5cf6;"><i class="bi bi-people"></i></div>
+            <div>
+                <h5 class="fw-bold mb-0">{{ total_customers }}</h5>
+                <small class="text-muted">Khách hàng</small>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Hàng 2: 2 Khung biểu đồ (Sẽ gắn Matplotlib ở Giai đoạn 2) -->
+<!-- Hàng 2: 2 Khung biểu đồ Matplotlib -->
+<div class="row g-3 mb-4">
+    <div class="col-md-8">
+        <div class="custom-card" style="min-height: 300px;">
+            <h6 class="fw-bold mb-3">Doanh thu theo thời gian</h6>
+            {% if chart_revenue %}
+                <img src="data:image/png;base64,{{ chart_revenue }}" class="img-fluid w-100" alt="Biểu đồ doanh thu">
+            {% else %}
+                <div class="text-center text-muted py-5 bg-light rounded-3">Chưa có dữ liệu đơn hàng.</div>
+            {% endif %}
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="custom-card" style="min-height: 300px;">
+            <h6 class="fw-bold mb-3">Tỷ trọng danh mục</h6>
+            {% if chart_category %}
+                <img src="data:image/png;base64,{{ chart_category }}" class="img-fluid w-100" alt="Biểu đồ danh mục">
+            {% else %}
+                <div class="text-center text-muted py-5 bg-light rounded-3">Chưa có dữ liệu danh mục.</div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+
+<!-- Hàng 3: Bảng Quản lý sản phẩm -->
+<div class="custom-card">
+    <h6 class="fw-bold mb-3">Quản lý sản phẩm</h6>
+    <div class="table-responsive">
+        <table class="table table-hover align-middle mb-0">
+            <thead class="table-light text-muted small">
+                <tr>
+                    <th>Sản phẩm</th>
+                    <th>Danh mục</th>
+                    <th>Giá bán</th>
+                    <th>Tồn kho</th>
+                    <th>Trạng thái</th>
+                    <th class="text-end">Thao tác</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for p in products %}
+                <tr>
+                    <td class="fw-semibold">{{ p.name }}</td>
+                    <td>{{ p.category.name }}</td>
+                    <td>{{ p.price|floatformat:0 }} đ</td>
+                    <td>{{ p.stock }}</td>
+                    <td>
+                        {% if p.stock > 0 %}
+                            <span class="badge bg-success-subtle text-success rounded-pill px-3 py-2">Đang bán</span>
+                        {% else %}
+                            <span class="badge bg-danger-subtle text-danger rounded-pill px-3 py-2">Hết hàng</span>
+                        {% endif %}
+                    </td>
+                    <td class="text-end">
+                        <td class="text-end">
+    <a href="{% url 'product_edit' p.id %}" class="btn btn-sm btn-outline-primary">
+        <i class="bi bi-pencil"></i>
+    </a>
+    <a href="{% url 'product_delete' p.id %}" class="btn btn-sm btn-outline-danger"
+       onclick="return confirm('Bạn có chắc muốn xóa sản phẩm này không?');">
+        <i class="bi bi-trash"></i>
+    </a>
+</td>
+                    </td>
+                </tr>
+                {% empty %}
+                <tr>
+                    <td colspan="6" class="text-center text-muted py-4">Chưa có sản phẩm nào.</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}
