@@ -1,0 +1,14 @@
+{% extends 'dashboard/base.html' %}
+{% block content %}
+<h4 class="fw-bold mb-4">Cài đặt hệ thống</h4>
+<div class="custom-card" style="max-width: 650px;">
+    <h6 class="fw-bold mb-3"><i class="bi bi-envelope-at text-primary"></i> Cấu hình gửi Email SMTP (Chapter 6)</h6>
+    <p class="text-muted small">Email gửi thông báo trạng thái đơn hàng hiện đang cấu hình trong <code>dashboard/utils_email.py</code>:</p>
+    <ul class="list-group list-group-flush mb-3">
+        <li class="list-group-item px-0"><strong>SMTP Server:</strong> smtp.gmail.com (SSL Port 465)</li>
+        <li class="list-group-item px-0"><strong>Email gửi:</strong> {{ sender_email }}</li>
+        <li class="list-group-item px-0"><strong>Cơ sở dữ liệu:</strong> MySQL (<code>electronics_store</code>)</li>
+    </ul>
+    <a href="/admin/" class="btn btn-outline-primary btn-sm">Mở trang Django Admin mặc định</a>
+</div>
+{% endblock %}   

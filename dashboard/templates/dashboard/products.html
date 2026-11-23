@@ -1,0 +1,55 @@
+
+{% extends 'dashboard/base.html' %}
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h4 class="fw-bold mb-0">Quản lý sản phẩm</h4>
+    <a href="{% url 'product_add' %}" class="btn btn-primary rounded-3 px-3">
+        <i class="bi bi-plus-lg"></i> Thêm sản phẩm
+    </a>
+</div>
+<div class="custom-card">
+    <form method="GET" class="mb-3 d-flex gap-2" style="max-width: 400px;">
+        <input type="text" name="q" value="{{ q }}" class="form-control" placeholder="Tìm theo tên sản phẩm...">
+        <button class="btn btn-outline-primary">Tìm</button>
+    </form>
+    <div class="table-responsive">
+        <table class="table table-hover align-middle mb-0">
+            <thead class="table-light text-muted small">
+                <tr>
+                    <th>Sản phẩm</th>
+                    <th>Danh mục</th>
+                    <th>Giá nhập</th>
+                    <th>Giá bán</th>
+                    <th>Tồn kho</th>
+                    <th>Trạng thái</th>
+                    <th class="text-end">Thao tác</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for p in products %}
+                <tr>
+                    <td class="fw-semibold">{{ p.name }}</td>
+                    <td>{{ p.category.name }}</td>
+                    <td>{{ p.cost_price|floatformat:0 }} đ</td>
+                    <td>{{ p.price|floatformat:0 }} đ</td>
+                    <td>{{ p.stock }}</td>
+                    <td>
+                        {% if p.stock > 0 %}
+                            <span class="badge bg-success-subtle text-success rounded-pill px-3 py-2">Đang bán</span>
+                        {% else %}
+                            <span class="badge bg-danger-subtle text-danger rounded-pill px-3 py-2">Hết hàng</span>
+                        {% endif %}
+                    </td>
+                    <td class="text-end">
+                        <a href="{% url 'product_edit' p.id %}" class="btn btn-sm btn-outline-primary"><i class="bi bi-pencil"></i></a>
+                        <a href="{% url 'product_delete' p.id %}" class="btn btn-sm btn-outline-danger" onclick="return confirm('Xóa sản phẩm này?');"><i class="bi bi-trash"></i></a>
+                    </td>
+                </tr>
+                {% empty %}
+                <tr><td colspan="7" class="text-center text-muted py-4">Không tìm thấy sản phẩm nào.</td></tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}
